@@ -1,5 +1,6 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Users", {
@@ -55,7 +56,7 @@ module.exports = {
       //   },
       // },
       quotesType: {
-        type: Sequelize.ENUM("motivational", "inspirational", "success"),
+        type: Sequelize.STRING,
         allowNull: false,
       },
 
