@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       //   },
       // },
       quotesType: {
-        type: DataTypes.ENUM("motivational", "inspirational", "success"),
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
