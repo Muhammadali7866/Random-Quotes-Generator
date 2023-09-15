@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const db = require("../models/index");
 const { UUID } = require("sequelize");
 const User = db.User;
+const QuoteMap = db.QuotesMap;
 
 console.log(User);
 
@@ -33,6 +34,13 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const token = jwt.sign({ id: user.id }, "your-secret-key", {
     expiresIn: "1h",
   });
+
+  // create the junction table
+  const type = quotesType.split(",");
+  type.forEach(async (element) => {
+    await QuoteMap.create({ user: user.id, type: element });
+  });
+
   return res.status(201).json({
     status: "success",
     message: "Successfully create user",
@@ -67,6 +75,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const token = jwt.sign({ id: user.id }, "your-secret-key", {
     expiresIn: "1h",
   });
+
   console.log(user);
   return res.status(200).json({
     message: "Success",
