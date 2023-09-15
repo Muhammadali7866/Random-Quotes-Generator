@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("User", {
+    await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -44,16 +44,16 @@ module.exports = {
           },
         },
       },
-      confirmPassword: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            args: true,
-            msg: "please confirm your password",
-          },
-        },
-      },
+      // confirmPassword: {
+      //   type: Sequelize.STRING,
+      //   allowNull: false,
+      //   validate: {
+      //     notEmpty: {
+      //       args: true,
+      //       msg: "please confirm your password",
+      //     },
+      //   },
+      // },
       quotesType: {
         type: Sequelize.ENUM("motivational", "inspirational", "success"),
         allowNull: false,
@@ -70,6 +70,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("User");
+    await queryInterface.dropTable("Users");
   },
 };

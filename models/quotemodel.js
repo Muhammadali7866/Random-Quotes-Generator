@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const userModel = require("./userModel");
 module.exports = (sequelize, DataTypes) => {
-  class quoteModel extends Model {
+  class Quote extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,20 +10,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      quoteModel.belongsToMany(models.userModel, {
-        through: models.quotesMap,
+      Quote.belongsToMany(models.User, {
+        through: "QuoteMap",
       });
     }
   }
-  quoteModel.init(
+  Quote.init(
     {
       quoteType: DataTypes.ENUM("motivational", "inspirational", "success"),
       description: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "quoteModel",
+      modelName: "Quote",
     }
   );
-  return quoteModel;
+  return Quote;
 };

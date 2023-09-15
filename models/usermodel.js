@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const quotesmap = require("./quotesmap");
 module.exports = (sequelize, DataTypes) => {
-  class userModel extends Model {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      userModel.belongsToMany(models.quoteModel, { through: models.quotesMap });
+      User.belongsToMany(models.Quote, { through: "QuoteMap" });
     }
   }
-  userModel.init(
+  User.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -56,16 +56,16 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      confirmPassword: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            args: true,
-            msg: "please confirm your password",
-          },
-        },
-      },
+      // confirmPassword: {
+      //   type: DataTypes.STRING,
+      //   allowNull: false,
+      //   validate: {
+      //     notEmpty: {
+      //       args: true,
+      //       msg: "please confirm your password",
+      //     },
+      //   },
+      // },
       quotesType: {
         type: DataTypes.ENUM("motivational", "inspirational", "success"),
         allowNull: false,
@@ -73,8 +73,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "userModel",
+      modelName: "User",
     }
   );
-  return userModel;
+  return User;
 };
