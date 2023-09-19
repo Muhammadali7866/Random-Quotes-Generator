@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Quote.belongsToMany(models.User, {
-        through: "QuoteMap",
+        through: "QuotesMap",
       });
     }
   }
   Quote.init(
     {
-      quoteType: DataTypes.ENUM("motivational", "inspirational", "success"),
+      quotesType: DataTypes.ENUM("motivational", "inspirational", "success"),
       description: DataTypes.STRING,
     },
     {
