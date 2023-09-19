@@ -29,7 +29,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
     name,
     email,
     password,
-    quotesType,
   });
   const token = jwt.sign({ id: user.id }, "your-secret-key", {
     expiresIn: "1h",
@@ -84,4 +83,17 @@ exports.login = catchAsync(async (req, res, next) => {
       user,
     },
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+  const decode = jwt.verify(token, "your-secret-key");
+  req.user = decode.id;
+  next();
 });
