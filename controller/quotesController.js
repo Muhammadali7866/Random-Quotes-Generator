@@ -5,9 +5,10 @@ const sendEmail = require("../utils/sendMail");
 const db = require("../models");
 const cathAsync = require("../utils/catchAsync");
 const appError = require("../utils/appError");
-const quotesmap = require("../models/quotesmap");
 const cron = require("node-cron");
+const { QuotesMap } = require("../models");
 const { use } = require("../app");
+
 const Quote = db.Quote;
 const User = db.User;
 const quoteMap = db.QuotesMap;
@@ -57,22 +58,25 @@ async function sendQuote(req, res, next) {
     const userAttributes = await User.findAll({
       attributes: ["id", "email"],
     });
+
     const userMapData = userAttributes.map((values) => ({
       id: values.id,
       email: values.email,
     }));
 
     //  1) firstly fetch all the types from user
-    for (const user of userMapData) {
-      const userTypeFetch = await quoteMap.findAll({
-        where: { user: user.id },
+
+    for (const users of userMapData) {
+      const userTypeFetch = await QuotesMap.findAll({
+        where: { userId: users.id },
         attributes: ["type"],
       });
 
       //  2) refine types from the user data
       const types = userTypeFetch.map((quoteMap) => quoteMap.type);
+      console.log("ALl types  of user is", types);
 
-      //3) fetch the description according to the type from quotes table
+      // 3) fetch the description according to the type from quotes table
 
       //3.1 generate random types if more than one
       let randomType = types;
@@ -86,27 +90,26 @@ async function sendQuote(req, res, next) {
         where: { quotesType: randomType },
       });
       const descriptions = desc.map((values) => values.description);
+      console.log("All description maps are ", descriptions);
 
       //   generate random decription
       const randomIndex = Math.floor(Math.random() * descriptions.length);
       const randomDescription = descriptions[randomIndex];
 
       // now send email user with type
-      // await sendEmail({
-      //     email: user.email,
-      //     subject: randomType,
-      //     message: randomDescription,
-      // });
+      await sendEmail({
+        email: users.email,
+        subject: randomType,
+        message: randomDescription,
+      });
       console.log(
-        `The user id=${user.id} and email=${user.email}....Type is=${randomType} and description is=${randomDescription}`
+        `The user id=${users.id} and email=${users.email}....Type is=${randomType} and description is=${randomDescription}`
       );
+      // }
     }
-    // return res.status(201).json({
-    //   message: "quote is successfully send",
-    // });
   } catch (err) {
     console.log(err.message);
   }
 }
 
-cron.schedule("*/5 * * * * *", sendQuote);
+cron.schedule("*/1 * * * *", sendQuote);

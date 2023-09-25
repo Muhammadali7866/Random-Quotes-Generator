@@ -13,8 +13,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   QuotesMap.init(
     {
-      type: DataTypes.STRING, // Corrected data type
-      user: DataTypes.INTEGER, // Corrected data type
+      userId: DataTypes.INTEGER,
+      quoteId: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     {
       sequelize,

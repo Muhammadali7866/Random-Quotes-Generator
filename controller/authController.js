@@ -6,9 +6,10 @@ const catchAsync = require("./../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const db = require("../models/index");
-const { UUID } = require("sequelize");
+const {} = require("uuid");
+const { UUIDV4 } = require("sequelize");
 const User = db.User;
-const QuoteMap = db.QuotesMap;
+const { QuotesMap } = require("../models/index");
 
 console.log(User);
 
@@ -35,9 +36,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 
   // create the junction table
-  const type = quotesType.split(",");
-  type.forEach(async (element) => {
-    await QuoteMap.create({ user: user.id, type: element });
+  const types = quotesType.split(",");
+  console.log("the tyeps is 0-------------------", types);
+  types.forEach(async (element) => {
+    await QuotesMap.create({ userId: user.id, type: element });
   });
 
   return res.status(201).json({
@@ -97,3 +99,35 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = decode.id;
   next();
 });
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ where: { id: req.params.id } });
+  if (!user) {
+    return next(new AppError("User is not found ", 404));
+  }
+  await user.destroy();
+  return res.status(200).json({
+    message: "User is sucessfully deleted",
+  });
+});
+
+exports.allUser = catchAsync(async (req, res, next) => {
+  const users = await User.findAll({});
+  return res.status(200).json({
+    message: "Success",
+    users: users.length,
+    Users: {
+      users,
+    },
+  });
+});
+
+// exports.forgetPassword = catchAsync(async (req, res, next) => {
+//   const user = User.findOne({where:{email:req.body.email}});
+//   if(!user){
+//     return next(new AppError("There is no user with email"));
+//   }
+//   const uuid1 = UUIDV4();
+//   const uuid2 = uuid4()
+
+// });

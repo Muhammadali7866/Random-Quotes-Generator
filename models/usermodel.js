@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.belongsToMany(models.Quote, { through: "QuoteMap" });
+      User.belongsToMany(models.Quote, {
+        through: "QuotesMaps",
+        foreignKey: "userId",
+      });
     }
   }
   User.init(
@@ -66,10 +69,6 @@ module.exports = (sequelize, DataTypes) => {
       //     },
       //   },
       // },
-      quotesType: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
     },
     {
       sequelize,

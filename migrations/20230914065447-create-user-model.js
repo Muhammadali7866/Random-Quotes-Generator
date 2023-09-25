@@ -55,10 +55,6 @@ module.exports = {
       //     },
       //   },
       // },
-      quotesType: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
 
       createdAt: {
         allowNull: true,

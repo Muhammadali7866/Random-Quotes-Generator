@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const userModel = require("./userModel");
 module.exports = (sequelize, DataTypes) => {
   class Quote extends Model {
     /**
@@ -11,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Quote.belongsToMany(models.User, {
-        through: "QuotesMap",
+        through: "QuotesMaps",
+        foreignKey: "quoteId",
       });
     }
   }
