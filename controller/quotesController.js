@@ -112,4 +112,4 @@ async function sendQuote(req, res, next) {
   }
 }
 
-cron.schedule("*/1 * * * *", sendQuote);
+cron.schedule("0 10 * * *", sendQuote);
